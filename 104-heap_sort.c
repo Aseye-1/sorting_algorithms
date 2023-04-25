@@ -1,6 +1,4 @@
 #include "sort.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 void swap_ints(int *a, int *b);
 void max_heapify(int *array, size_t size, size_t base, size_t root);
