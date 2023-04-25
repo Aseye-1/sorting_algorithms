@@ -1,6 +1,4 @@
 #include "sort.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 void swap_node_ahead(listint_t **list, listint_t **tail, listint_t **shaker);
 void swap_node_behind(listint_t **list, listint_t **tail, listint_t **shaker);
@@ -58,46 +56,43 @@ void swap_node_behind(listint_t **list, listint_t **tail, listint_t **shaker)
 	*shaker = tmp;
 }
 
-
 /**
- *cocktail_sort_list - this is a cocktail sort implementation
- *working on a double linked lists
- *@list: list
+ * cocktail_sort_list - Sort a listint_t doubly-linked list of integers in
+ *                      ascending order using the cocktail shaker algorithm.
+ * @list: A pointer to the head of a listint_t doubly-linked list.
  */
 void cocktail_sort_list(listint_t **list)
 {
-	listint_t *node;
-	int swap_done = 1;
+	listint_t *tail, *shaker;
+	bool shaken_not_stirred = false;
 
-	if (list == '\0' || (*list) == '\0' || (*list)->next == '\0')
+	if (list == NULL || *list == NULL || (*list)->next == NULL)
 		return;
-	node = *list;
-	while (swap_done == 1)
+
+	for (tail = *list; tail->next != NULL;)
+		tail = tail->next;
+
+	while (shaken_not_stirred == false)
 	{
-		swap_done = 0;
-		while (node->next)
+		shaken_not_stirred = true;
+		for (shaker = *list; shaker != tail; shaker = shaker->next)
 		{
-			if (node->n > node->next->n)
+			if (shaker->n > shaker->next->n)
 			{
-				node = swap_node(node->next, list);
-				swap_done = 1;
-				print_list(*list);
+				swap_node_ahead(list, &tail, &shaker);
+				print_list((const listint_t *)*list);
+				shaken_not_stirred = false;
 			}
-			node = node->next;
 		}
-		if (swap_done == 0)
-			break;
-		swap_done = 0;
-		while (node->prev)
+		for (shaker = shaker->prev; shaker != *list;
+				shaker = shaker->prev)
 		{
-			if (node->n < node->prev->n)
+			if (shaker->n < shaker->prev->n)
 			{
-				node = swap_node(node, list);
-				swap_done = 1;
-				print_list(*list);
+				swap_node_behind(list, &tail, &shaker);
+				print_list((const listint_t *)*list);
+				shaken_not_stirred = false;
 			}
-			else
-				node = node->prev;
 		}
 	}
 }
